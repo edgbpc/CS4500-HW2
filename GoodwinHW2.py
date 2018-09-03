@@ -40,11 +40,13 @@ When game terminates, vital statistics are reported."""
 print(introMessage + "\n")
 outputFile.write(introMessage + "\n\n")
 
-
-
-
 # declaring the gameBoardLocation list.  Lists are index from 0. Ignoring index 0 for this project
 gameBoardLocation = [[0, 0, 0, 0, 0]] * 22
+
+# gameDotTracker keeps count times a location is visited.  Game ends when all locations visited.
+gameDotTracker = [0] * 22
+gameDotTracker[0] = 1  # declaring 0 index location as visited because this location is not used in this project
+gameDotTracker[1] = 1  # location one starts as visited
 
 # gameBoardLocation contains the game data for each position on the board.
 # Data is as follows:
@@ -56,14 +58,8 @@ gameBoardLocation = [[0, 0, 0, 0, 0]] * 22
 # index of gameBoardLocation cooresponds to a location on the pyramid.
 # Example: gameBoardLocation[1] refers to position 1
 
-
-# gameDotTracker keeps count times a location is visited.  Game ends when all locations visited.
-gameDotTracker = [0] * 22
-gameDotTracker[0] = 1  # declaring 0 index location as visited because this location is not used in this project
-gameDotTracker[1] = 1  # location one starts as visited
-
 # gameBoardLocation encoding
-gameBoardLocation[0] = [0, None, None, None, None] # unused for this project
+gameBoardLocation[0] = [0, None, None, None, None]  # unused for this project
 gameBoardLocation[1] = [0, None, 2, None, 3]  # dot count starts at 0, valid moves are lower left, lower right
 gameBoardLocation[2] = [0, None, 4, 1, 5]
 gameBoardLocation[3] = [0, 1, 5, None, 6]
@@ -86,11 +82,11 @@ gameBoardLocation[19] = [0, 13, None, 14, None]
 gameBoardLocation[20] = [0, 14, None, 15, None]
 gameBoardLocation[21] = [0, 15, None, None, None]
 
-# this variable controls if the game is continuing to play.  Once all locations have been visited once, stillPlaying
+# stillPlaying controls if the game is continuing to play.  Once all locations have been visited once, stillPlaying
 # will change to false and terminate the game
 stillPlaying = True
 diceRoll = 0
-currentLocation = 1
+currentLocation = 1  # game starts location 1.
 print("Game Location: " + str(currentLocation), end='')
 outputFile.write("Game Location: " + str(currentLocation))
 
@@ -112,9 +108,11 @@ while stillPlaying:
         print(",", end='')
         print(str(currentLocation), end='')
         outputFile.write("," + str(currentLocation))
+        # commented code below allows for more verbose description of what is occurring in game
         # print("Move valid.  New Location is " + str(currentLocation) + ". Incrementing count. Location " + str(currentLocation) +
         # " has been visited " + str(gameBoardLocation[currentLocation][0]) + " times")
     else:
+        # commented code below allows for more verbose description of what is occurring in game
         # print("Unable to move.  Incrementing count for location " + str(currentLocation))
         currentLocation = currentLocation
         gameDotTracker[currentLocation] += 1
@@ -136,19 +134,28 @@ print("\nGame Statistics:\n")
 outputFile.write("\nGame Statistics:\n\n")
 
 totalMoves = sum(gameDotTracker)
+# need to adjust off 1 move from totalMoves in each calculation due to the unused element 0 in gameDotTracker being
+# initalized to 1.
+
 print("Total moves to complete the game: " + str(totalMoves - 1))
 outputFile.write("Total moves to complete the game: " + str(totalMoves - 1) + "\n")
 print("Average visits per location: " + str((totalMoves - 1)/21))
 outputFile.write("Average visits per location: " + str((totalMoves - 1)/21) + "\n")
+# find the maximum of dots on any one location
 maxDots = max(gameDotTracker)
 print("Maximum visits to any one location: " + str(maxDots))
 outputFile.write("Maximum visits to any one location: " + str(maxDots) + "\n")
 
+# this code finds each instance of the maximum number of dots in a location.
+# and prints the location to the screen and to file
 for index, dots in enumerate(gameDotTracker, start=1):
     if dots == maxDots:
+        # need to adjust off 1 from the index due to gameDotTracker index beginning at 0 and that element is unused
+        # for this simulation
         print("Location " + str(index-1) + " had most visits of " + str(dots))
         outputFile.write("Location " + str(index-1) + " had most visits of " + str(dots) + "\n")
-        
+
+# close the file being written
 outputFile.close()
 
 
