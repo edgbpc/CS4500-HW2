@@ -15,9 +15,23 @@ https://stackoverflow.com/questions/10660435/pythonic-way-to-create-a-long-multi
 
 Requirements:
 
-Design:
+See text document on canvas
 
-2D LIST
+Design:
+Use a list of tuples to represent each location on the pyramid.  Each location to be encoded with data for number
+of visits (dots) as well as valid moves. Invalid moves will be marked as None in the tuple.
+use a variable, currentlocation, to hold where the player is currently at.  Starts at one.
+Use if check to see if a move is valid
+if move is valid, update currentlocation to the new location and record a visit.
+if the move is not valid, currentlocation remains the same and update that location with a new visit
+maintain another list of how often a location is visited.
+game continues until a 0 is no longer detected in the tracker list.
+one the game ends, compute statistics and display.
+
+made a couple of design decisions-
+I count the initial start of the game as a visit
+I also added a pause in the execution so the use can "see" the locations being added to the visit list
+
 
 Development:
 
@@ -45,12 +59,17 @@ gameBoardLocation = [[0, 0, 0, 0, 0]] * 22
 
 # gameDotTracker keeps count times a location is visited.  Game ends when all locations visited.
 gameDotTracker = [0] * 22
-gameDotTracker[0] = 1  # declaring 0 index location as visited because this location is not used in this project
-gameDotTracker[1] = 1  # location one starts as visited
+# i start the 0 location as 1 so that the game can end if no 0s are found in the list.  this requires an adjustment of
+# -1 to the game statistics
+gameDotTracker[0] = 1
+# i opted to count the start of the game as a visit to location 1.  remove this initialization to not have the start
+# counted as a visit
+gameDotTracker[1] = 1
 
 # gameBoardLocation contains the game data for each position on the board.
-# Data is as follows:
-# index 0 - dot count
+# Encoding is as follows:
+# index 0 - dot counter
+# ended up not using the index 0 and opted for a separate list for the tracking of dots.  left in code for future use
 # index 1 - Valid Upper Left Movement
 # index 2 - Valid Lower Left Movement
 # index 3 - Valid Upper Right Movement
