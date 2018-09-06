@@ -1,8 +1,14 @@
 '''
 Eric Goodwin
 09-01-2018
-Version 1.0
+Python 3.7.0
+PyCharm IDE
 CS 4500 Introduction to the Software Profession
+External Files created - HW2goodwinOutfile.txt
+Program creates this file with output data.  data is same as what
+is displayed on the screen running of the program.
+
+Program does not take an input file or commands from the user
 
 Resources Used:
 https://docs.python.org/3/library
@@ -13,9 +19,18 @@ http://treyhunner.com/2016/04/how-to-loop-with-indexes-in-python/
 https://stackoverflow.com/questions/493386/how-to-print-without-newline-or-space
 https://stackoverflow.com/questions/10660435/pythonic-way-to-create-a-long-multi-line-string
 
-Requirements:
+Requirements (from HW2 Specification):
+Simulate dice roll to determine direction - DONE
+Account for invalid moves as a move as if jumping in place - DONE
+Map moves to dice result - DONE
+Encode movements on tuple - DONE
+Print results to Screen - DONE
+Print results to output file - DONE
+Format out of output line - EX: 5, 4, 5, 6, 7.  Period signifies end of the line - DONE
+Calculate statistics - total moves, average dots on a node, which node has max dots - DONE
 
-See text document on canvas
+
+
 
 Design:
 Use a list of tuples to represent each location on the pyramid.  Each location to be encoded with data for number
@@ -32,6 +47,8 @@ made a couple of design decisions-
 I count the initial start of the game as a visit
 I also added a pause in the execution so the use can "see" the locations being added to the visit list
 
+Use git for version control.
+
 
 Development:
 
@@ -40,7 +57,10 @@ Development:
 # for the random number generator
 import random
 # time used to sleep the program during execution which allows the program to run slow enough to see the locations change
-import time
+# commented out because this not part of the product spec for this assignment
+# import time
+
+# program creates this file if not already created
 outputFile = open("HW2goodwinOutfile.txt", "w")
 
 introMessage = """Dice Rolling Simulation - 
@@ -115,14 +135,18 @@ while stillPlaying:
     # 1 = Upper Left, 2 = Lower Left, 3 = Upper Right, 4 = Lower Right
     diceRoll = random.randint(1, 4)
     # added this sleep so I could watch the program execute instead of instantly complete.
-    time.sleep(0.005)
+    # adjust this value to slow/down speed up the simulation
+    # commented out as not a requirement of this assignment.  uncomment out to restore delay
+    # time.sleep(0.015)
 
 # this section checks to see if the location selected by the dice roll is valid.  if so, updates the visit counter and
 # changes current location to the new location on the gameboard.
 # if the move is not valid, increments the counter for the currentlocation
     if gameBoardLocation[currentLocation][diceRoll] is not None:
         currentLocation = gameBoardLocation[currentLocation][diceRoll]
-        gameBoardLocation[currentLocation][0] += 1
+        # for progam efficieny, commenting out the dottracking in the location tuple since this isn't used in the final
+        # calculations.  left for future use.
+        # gameBoardLocation[currentLocation][0] += 1
         gameDotTracker[currentLocation] += 1
         print(",", end='')
         print(str(currentLocation), end='')
@@ -135,7 +159,9 @@ while stillPlaying:
         # print("Unable to move.  Incrementing count for location " + str(currentLocation))
         currentLocation = currentLocation
         gameDotTracker[currentLocation] += 1
-        gameBoardLocation[currentLocation][0] += 1
+        # for progam efficieny, commenting out the dottracking in the location tuple since this isn't used in the final
+        # calculations.  left for future use.
+        # gameBoardLocation[currentLocation][0] += 1
         print(",", end='')
         print(str(currentLocation), end='')
         outputFile.write("," + str(currentLocation))
@@ -148,7 +174,7 @@ while stillPlaying:
         outputFile.write(".\n")
 
 
-# Reporting
+# Reporting statistics
 print("\nGame Statistics:\n")
 outputFile.write("\nGame Statistics:\n\n")
 
@@ -167,18 +193,22 @@ outputFile.write("Maximum visits to any one location: " + str(maxDots) + "\n")
 
 # this code finds each instance of the maximum number of dots in a location.
 # and prints the location to the screen and to file
-for index, dots in enumerate(gameDotTracker, start=1):
-    if dots == maxDots:
+# commented out as this assignment does not request this output
+# for index, dots in enumerate(gameDotTracker, start=1):
+#    if dots == maxDots:
         # need to adjust off 1 from the index due to gameDotTracker index beginning at 0 and that element is unused
         # for this simulation
-        print("Location " + str(index-1) + " had most visits of " + str(dots))
-        outputFile.write("Location " + str(index-1) + " had most visits of " + str(dots) + "\n")
+#       print("Location " + str(index-1) + " had most visits of " + str(dots))
+#       outputFile.write("Location " + str(index-1) + " had most visits of " + str(dots) + "\n")
 
 # close the file being written
 outputFile.close()
 
 
-
+# testing
+# used defined dice rolls to determine if currentlocation changed to expected location
+# displayed gameDotTracker to be able to confirm dot summing and max dots to verify index
+# git used for version control.
 
 
 
